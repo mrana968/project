@@ -1,0 +1,49 @@
+pipeline {
+    agent any
+    environment {
+     name = 'Manish'   
+    }
+    parameters {
+                string(name: 'Age', defaultValue: 'def', description: 'hello')
+                booleanParam(name: 'isMale', defaultValue: true, description: "")
+                choice(name: 'city', choices: ['Jaipur','Mumbai','Pune'], description: "")
+            }
+    stages {
+        stage('1') {
+            environment {
+            Age = '29'   
+                }
+            steps {
+               sh " echo 'test' " 
+               sh " echo 'test1'"
+               sh " echo '${BUILD_ID}'"
+               sh " echo '${params.Age}'"
+               sh " echo '${params.isMale}'"
+               sh " echo '${name}'"
+               sh " echo '${params.city}'"
+            }
+        }
+        
+        stage('2') {
+            input {
+                message "Should we continue?"
+                ok "Yes"
+            }
+            steps {
+                echo 'build'
+                sh " echo '${name}'"
+            }
+        }
+    }
+    post { 
+        always { 
+            echo 'I will always say Hello again!'
+        }
+        failure {
+            echo 'Job failed'
+        }
+        success {
+            echo 'Job Pass'    
+        }
+    }
+}
